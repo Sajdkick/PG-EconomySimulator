@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PGLevel {
 
+    public static PGLevel mostPopularLevel = null;
+
     PGCreator creator;
 
     uint playCount;
@@ -15,6 +17,9 @@ public class PGLevel {
     float bestScore;
 
     public PGLevel(PGCreator _creator, uint _quality, float _difficulty) {
+
+        if (mostPopularLevel == null)
+            mostPopularLevel = this;
 
         creator = _creator;
         quality = _quality;
@@ -48,6 +53,9 @@ public class PGLevel {
     {
 
         playCount++;
+        if (playCount > mostPopularLevel.GetPlayCount())
+            mostPopularLevel = this;
+
         creator.ChangeGold(3);
 
         int reward = 5;
@@ -64,7 +72,7 @@ public class PGLevel {
             if (attempt > bestScore)
             {
 
-                gamer.ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromBeatingTheHighscore());
+                gamer.ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromBeatingAHighscore(playCount));
 
                 bestScore = attempt;
                 if (highscore.Count >= 10) //You beat the highscore on a level with at least 10 plays.

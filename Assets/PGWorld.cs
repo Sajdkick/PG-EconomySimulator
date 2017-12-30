@@ -32,9 +32,7 @@ public class PGWorld : MonoBehaviour {
 
             ProcessYear();
 
-            Debug.Log("Level count: " + levelList.Count + ", No level Errors: " + PGGamer.noNewLevelError);
-
-            CountGold();
+            CountGamerEnjoyment();
 
         }
 
@@ -76,6 +74,47 @@ public class PGWorld : MonoBehaviour {
 
         Debug.Log("Gamer count: " + gamerCount);
         Debug.Log("Creator count: " + creatorCount);
+
+    }
+    void CountGamerEnjoyment()
+    {
+
+        int gamerCount = 0;
+        float totalEnjoyment = 0;
+        float min = float.MaxValue;
+        float max = float.MinValue;
+        uint happyCount = 0;
+        uint sadCount = 0;
+        for (int i = 0; i < playerList.Count; i++)
+        {
+
+            //if ((string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null) == "Creator")
+            //    creatorCount++;
+            if ((string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null) == "Gamer")
+            {
+
+                float enjoyment = playerList[i].GetEnjoyment();
+
+                if (enjoyment > 0)
+                    happyCount++;
+                else sadCount++;
+
+                if (enjoyment > max)
+                    max = enjoyment;
+                if (enjoyment < min)
+                    min = enjoyment;
+
+                totalEnjoyment += enjoyment;
+                gamerCount++;
+
+            }
+            
+        }
+
+        string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
+        info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
+
+        Debug.Log(info);
 
     }
     void CountLevelPlays()

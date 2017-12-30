@@ -60,14 +60,14 @@ public abstract class PGPlayer {
     }
     public void ChangeGold(int changeIngold)
     {
-        ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromGold(changeIngold));
+        ChangeEnjoyment(BehaviorManager.Enjoyment.GoldToEnjoyment(changeIngold));
         gold += changeIngold;
     }
     public float GetEnjoyment()
     {
         return enjoyment;
     }
-    public void ChangeEnjoyment(int changeInEnjoyment)
+    public void ChangeEnjoyment(float changeInEnjoyment)
     {
         enjoyment += changeInEnjoyment;
     }
