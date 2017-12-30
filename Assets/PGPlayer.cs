@@ -50,6 +50,7 @@ public abstract class PGPlayer {
     }
 
     protected uint gold = 0;
+    protected uint enjoyment = 0;
 
     public PGPlayer() { }
 
@@ -60,6 +61,14 @@ public abstract class PGPlayer {
     public void GiveGold(uint _gold)
     {
         gold += _gold;
+    }
+    public uint GetEnjoyment()
+    {
+        return enjoyment;
+    }
+    public void ChangeEnjoyment(uint enjoymentChange)
+    {
+        enjoyment += enjoymentChange;
     }
 
     public virtual string GetInfo() {
