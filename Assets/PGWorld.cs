@@ -11,6 +11,9 @@ public class PGWorld : MonoBehaviour {
     List<PGPlayer> playerList;
     List<PGLevel> levelList;
 
+    List<float> chartData;
+    public LineChart linechart;
+
     // Use this for initialization
     void Start() {
 
@@ -18,9 +21,10 @@ public class PGWorld : MonoBehaviour {
 
         playerList = new List<PGPlayer>();
         CreatePlayers(1000);
-        CountPlayers();
 
         levelList = new List<PGLevel>();
+
+        chartData = new List<float>();
 
     }
 
@@ -30,9 +34,18 @@ public class PGWorld : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space))
         {
 
-            ProcessYear();
+            Random.InitState((int)(Time.time * 1000));
 
-            CountGamerEnjoyment();
+            for (int i = 0; i < 1; i++)
+            {
+
+                ProcessYear();
+                CountGamerEnjoyment();
+                Clear();
+
+            }
+
+            linechart.UpdateData(chartData.ToArray());
 
         }
 
@@ -46,6 +59,16 @@ public class PGWorld : MonoBehaviour {
             Debug.Log(info);
 
         }
+
+    }
+
+    void Clear()
+    {
+
+        playerList = new List<PGPlayer>();
+        CreatePlayers(1000);
+
+        levelList = new List<PGLevel>();
 
     }
 
@@ -111,10 +134,12 @@ public class PGWorld : MonoBehaviour {
             
         }
 
-        string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
-        info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
+        chartData.Add(totalEnjoyment / gamerCount);
 
-        Debug.Log(info);
+        //string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
+        //info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
+
+        //Debug.Log(info);
 
     }
     void CountLevelPlays()
@@ -214,6 +239,8 @@ public class PGWorld : MonoBehaviour {
         for(int i = 0; i < playerList.Count; i++)
             playerList[i].ProcessDay();
 
+        CountGamerEnjoyment();
+
         day++;
 
     }
@@ -221,7 +248,21 @@ public class PGWorld : MonoBehaviour {
     public void AddLevel(PGLevel level)
     {
 
-        levelList.Add(level);
+        if (levelList.Count == 0)
+            levelList.Add(level);
+        else
+            for(int i = 0; i < levelList.Count; i++)
+            {
+
+                if(levelList[i].GetDifficulty() > level.GetDifficulty())
+                {
+
+                    levelList.Insert(i, level);
+                    break;
+
+                }
+
+            }
 
     }
     public PGLevel GetLevel(int index)

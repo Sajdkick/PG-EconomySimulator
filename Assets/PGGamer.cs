@@ -100,7 +100,11 @@ public class PGGamer : PGPlayer {
         for(int i = 0; i < 10; i++)
         {
 
-            int levelIndex = Random.Range(0, levelCount);
+            float skillOffset = 0;
+            int min = Mathf.Clamp((int)(((skill + skillOffset - 1) / 10.0f) * levelCount), 0, levelCount - 1);
+            int max = Mathf.Clamp((int)(((skill + skillOffset + 1) / 10.0f) * levelCount), 0, levelCount - 1);
+
+            int levelIndex = Random.Range(min, max);
             PGLevel level = PGWorld.instance.GetLevel(levelIndex);
 
             LevelGamerData levelGamerData = null;

@@ -176,7 +176,7 @@ public static class BehaviorManager {
                 chance += 30 * (10 - skillDifference) / 10.0f;
 
                 //We add 50 percent if it's of the best quality.
-                chance += levelQuality * 12.5f;
+                chance += Mathf.Pow(levelQuality / 4.0f, 3) * 4 * 12.5f;
 
             }
             else if (!beaten)
@@ -189,7 +189,7 @@ public static class BehaviorManager {
                 chance += (1 - (Mathf.Abs(bestAttempt) / 20.0f)) * 30;
 
                 //We add 50 percent if it's of the best quality.
-                chance += levelQuality * 12.5f;
+                chance += Mathf.Pow(levelQuality / 4.0f, 3) * 4 * 12.5f;
 
             }
             else
@@ -199,7 +199,7 @@ public static class BehaviorManager {
                 chance += (1 - (Mathf.Abs(bestAttempt) / 20.0f)) * 30;
 
                 //We add 35 percent if it's of the best quality.
-                chance += levelQuality * 7.5f;
+                chance += Mathf.Pow(levelQuality / 4.0f, 3) * 4 * 7.5f;
 
             }
 
