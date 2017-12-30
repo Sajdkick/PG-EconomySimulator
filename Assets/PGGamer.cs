@@ -27,7 +27,7 @@ public class PGGamer : PGPlayer {
     public PGGamer() {
 
         playedLevels = new List<int>();
-        skill = Random.Range(0, 10.0f);
+        skill = BehaviorManager.Gamer.DetermineInitialGamerSkill();
 
     }
 
@@ -48,7 +48,7 @@ public class PGGamer : PGPlayer {
     public override void ProcessHour()
     {
 
-        if (Random.Range(0, 8 * 30) > 8 * 30 - levelsPlayedPerMonth)
+        if (BehaviorManager.Session.StartASessionThisHourAndPlayALevel(levelsPlayedPerMonth))
         {
 
             int levelCount = PGWorld.instance.GetLevelCount();
@@ -57,34 +57,38 @@ public class PGGamer : PGPlayer {
             {
 
                 noNewLevelError++;
-                return;
 
             }
-
-            if(levelCount == playedLevels.Count)
+            else if(levelCount == playedLevels.Count)
             {
 
                 noNewLevelError++;
                 int level = Random.Range(0, levelCount);
                 Play(PGWorld.instance.GetLevel(level));
-                return;
-
+                
             }
+            else
+            {
 
-            while (true) {
+                while (true) {
 
-                int level = Random.Range(0, levelCount);
+                    int level = Random.Range(0, levelCount);
 
-                if (!playedLevels.Contains(level))
-                {
+                    if (!playedLevels.Contains(level))
+                    {
 
-                    playedLevels.Add(level);
-                    Play(PGWorld.instance.GetLevel(level));
-                    return;
+                        playedLevels.Add(level);
+                        Play(PGWorld.instance.GetLevel(level));
+                        break;
+
+                    }
 
                 }
 
             }
+
+            // We subtract the base enjoyment, so if we played a level and enjoyed at just as much as the base enjoyment our enjoyment hasn't changed.
+            enjoyment -= BehaviorManager.Enjoyment.BaseEnjoymentForAPositiveExperience();
 
         }
 
@@ -104,13 +108,15 @@ public class PGGamer : PGPlayer {
 
             if (won)
             {
+
+                enjoyment += BehaviorManager.Enjoyment.EnjoymentFromBeatingLevel(skill, level.GetDifficulty(), level.GetQuality(), i);
                 wins++;
                 break;
+
             }
             else
             {
-                float retry = Random.Range(0, 20.0f) - Mathf.Abs(attempt); //If retry is bigger than 0, we try again!
-                if (retry > 0)
+                if (BehaviorManager.Play.WillPlayerRetry(attempt))
                 {
 
                     retries++;

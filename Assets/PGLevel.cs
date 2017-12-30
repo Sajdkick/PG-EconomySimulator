@@ -6,20 +6,21 @@ public class PGLevel {
 
     PGCreator creator;
 
-    uint quality;
     uint playCount;
 
+    uint quality;
     float difficulty;
+
     List<float> highscore;
     float bestScore;
 
-    public PGLevel(PGCreator _creator, uint _quality) {
+    public PGLevel(PGCreator _creator, uint _quality, float _difficulty) {
 
         creator = _creator;
         quality = _quality;
+        difficulty = _difficulty;
         playCount = 0;
 
-        difficulty = Random.Range(0, 10.0f);
         highscore = new List<float>();
         bestScore = float.MinValue;
 
@@ -30,21 +31,29 @@ public class PGLevel {
         return playCount;
 
     }
+    public float GetDifficulty()
+    {
+
+        return difficulty;
+
+    }
+    public uint GetQuality()
+    {
+
+        return quality;
+
+    }
 
     public bool Play(PGGamer gamer, out float attempt)
     {
 
         playCount++;
-        creator.GiveGold(3);
+        creator.ChangeGold(3);
 
-        uint reward = 5;
+        int reward = 5;
 
-        float skillDifference = gamer.GetSkill() - difficulty; //The difference in skill and difficulty, ranges between 5 for very easy and -5 for extremelly hard.
-        float roll = Random.Range(0, 20.0f);
+        bool won = BehaviorManager.Play.DetermineIfWeBeatALevel(gamer.GetSkill(), difficulty, out attempt);
 
-        attempt = roll - (10 - skillDifference); //We roll a number between 0 and 10, if this number - our skill difference is positive, it's a successful attempt.
-
-        bool won = attempt > 0;
         if (won)
         {
 
@@ -55,6 +64,8 @@ public class PGLevel {
             if (attempt > bestScore)
             {
 
+                gamer.ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromBeatingTheHighscore());
+
                 bestScore = attempt;
                 if (highscore.Count >= 10) //You beat the highscore on a level with at least 10 plays.
                     reward += 50;
@@ -64,7 +75,7 @@ public class PGLevel {
 
         }
 
-        gamer.GiveGold(reward);
+        gamer.ChangeGold(reward);
 
         return won;
 

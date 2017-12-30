@@ -49,26 +49,27 @@ public abstract class PGPlayer {
 
     }
 
-    protected uint gold = 0;
-    protected uint enjoyment = 0;
+    protected int gold = 0;
+    protected float enjoyment = 0;
 
     public PGPlayer() { }
 
-    public uint GetGold()
+    public int GetGold()
     {
         return gold;
     }
-    public void GiveGold(uint _gold)
+    public void ChangeGold(int changeIngold)
     {
-        gold += _gold;
+        ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromGold(changeIngold));
+        gold += changeIngold;
     }
-    public uint GetEnjoyment()
+    public float GetEnjoyment()
     {
         return enjoyment;
     }
-    public void ChangeEnjoyment(uint enjoymentChange)
+    public void ChangeEnjoyment(int changeInEnjoyment)
     {
-        enjoyment += enjoymentChange;
+        enjoyment += changeInEnjoyment;
     }
 
     public virtual string GetInfo() {

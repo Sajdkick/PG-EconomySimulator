@@ -109,8 +109,8 @@ public class PGWorld : MonoBehaviour {
     void CountGold()
     {
 
-        Dictionary<string, uint> playerCount = new Dictionary<string, uint>();
-        Dictionary<string, uint> goldCount = new Dictionary<string, uint>();
+        Dictionary<string, int> playerCount = new Dictionary<string, int>();
+        Dictionary<string, int> goldCount = new Dictionary<string, int>();
 
         int max = 0;
         int min = 0;
@@ -120,7 +120,7 @@ public class PGWorld : MonoBehaviour {
 
             string name = (string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null);
 
-            uint gold = playerList[i].GetGold();
+            int gold = playerList[i].GetGold();
             if (gold > playerList[max].GetGold())
                 max = i;
             if (gold < playerList[min].GetGold())
@@ -143,7 +143,7 @@ public class PGWorld : MonoBehaviour {
 
         }
 
-        foreach (KeyValuePair<string, uint> item in playerCount)
+        foreach (KeyValuePair<string, int> item in playerCount)
         {
 
             Debug.Log("Average " + item.Key + " gold: " + (float)goldCount[item.Key] / item.Value);
