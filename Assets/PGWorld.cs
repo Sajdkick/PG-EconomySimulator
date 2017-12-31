@@ -11,9 +11,6 @@ public class PGWorld : MonoBehaviour {
     List<PGPlayer> playerList;
     List<PGLevel> levelList;
 
-    List<float> chartData;
-    public LineChart linechart;
-
     // Use this for initialization
     void Start() {
 
@@ -23,8 +20,6 @@ public class PGWorld : MonoBehaviour {
         CreatePlayers(1000);
 
         levelList = new List<PGLevel>();
-
-        chartData = new List<float>();
 
     }
 
@@ -45,7 +40,7 @@ public class PGWorld : MonoBehaviour {
 
             }
 
-            linechart.UpdateData(chartData.ToArray());
+            ChartManager.instance.UpdateCharts();
 
         }
 
@@ -134,7 +129,7 @@ public class PGWorld : MonoBehaviour {
             
         }
 
-        chartData.Add(totalEnjoyment / gamerCount);
+        ChartManager.instance.AddValue("Enjoyment", totalEnjoyment / gamerCount);
 
         //string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
         //info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
@@ -210,12 +205,14 @@ public class PGWorld : MonoBehaviour {
         foreach (KeyValuePair<string, int> item in playerCount)
         {
 
-            Debug.Log("Average " + item.Key + " gold: " + (float)goldCount[item.Key] / item.Value);
+            //Debug.Log("Average " + item.Key + " gold: " + (float)goldCount[item.Key] / item.Value);
 
         }
 
-        Debug.Log("Richest player: " + playerList[max].GetGold() + " gold, " + playerList[max].GetType().GetMethod("GetName").Invoke(null, null));
-        Debug.Log("Poorest player: " + playerList[min].GetGold() + " gold, " + playerList[min].GetType().GetMethod("GetName").Invoke(null, null));
+        ChartManager.instance.AddValue("Richest Player", playerList[max].GetGold());
+
+        //Debug.Log("Richest player: " + playerList[max].GetGold() + " gold, " + playerList[max].GetType().GetMethod("GetName").Invoke(null, null));
+        //Debug.Log("Poorest player: " + playerList[min].GetGold() + " gold, " + playerList[min].GetType().GetMethod("GetName").Invoke(null, null));
 
     }
 
@@ -240,6 +237,7 @@ public class PGWorld : MonoBehaviour {
             playerList[i].ProcessDay();
 
         CountGamerEnjoyment();
+        CountGold();
 
         day++;
 
