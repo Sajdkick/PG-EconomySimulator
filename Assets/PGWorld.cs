@@ -18,7 +18,6 @@ public class PGWorld : MonoBehaviour {
 
         playerList = new List<PGPlayer>();
         CreatePlayers(1000);
-        CountPlayers();
 
         levelList = new List<PGLevel>();
 
@@ -30,11 +29,18 @@ public class PGWorld : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space))
         {
 
-            ProcessYear();
+            Random.InitState((int)(Time.time * 1000));
 
-            Debug.Log("Level count: " + levelList.Count + ", No level Errors: " + PGGamer.noNewLevelError);
+            for (int i = 0; i < 1; i++)
+            {
 
-            CountGold();
+                ProcessYear();
+                CountGamerEnjoyment();
+                Clear();
+
+            }
+
+            ChartManager.instance.UpdateCharts();
 
         }
 
@@ -48,6 +54,16 @@ public class PGWorld : MonoBehaviour {
             Debug.Log(info);
 
         }
+
+    }
+
+    void Clear()
+    {
+
+        playerList = new List<PGPlayer>();
+        CreatePlayers(1000);
+
+        levelList = new List<PGLevel>();
 
     }
 
@@ -76,6 +92,49 @@ public class PGWorld : MonoBehaviour {
 
         Debug.Log("Gamer count: " + gamerCount);
         Debug.Log("Creator count: " + creatorCount);
+
+    }
+    void CountGamerEnjoyment()
+    {
+
+        int gamerCount = 0;
+        float totalEnjoyment = 0;
+        float min = float.MaxValue;
+        float max = float.MinValue;
+        uint happyCount = 0;
+        uint sadCount = 0;
+        for (int i = 0; i < playerList.Count; i++)
+        {
+
+            //if ((string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null) == "Creator")
+            //    creatorCount++;
+            if ((string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null) == "Gamer")
+            {
+
+                float enjoyment = playerList[i].GetEnjoyment();
+
+                if (enjoyment > 0)
+                    happyCount++;
+                else sadCount++;
+
+                if (enjoyment > max)
+                    max = enjoyment;
+                if (enjoyment < min)
+                    min = enjoyment;
+
+                totalEnjoyment += enjoyment;
+                gamerCount++;
+
+            }
+            
+        }
+
+        ChartManager.instance.AddValue("Enjoyment", totalEnjoyment / gamerCount);
+
+        //string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
+        //info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
+
+        //Debug.Log(info);
 
     }
     void CountLevelPlays()
@@ -109,8 +168,8 @@ public class PGWorld : MonoBehaviour {
     void CountGold()
     {
 
-        Dictionary<string, uint> playerCount = new Dictionary<string, uint>();
-        Dictionary<string, uint> goldCount = new Dictionary<string, uint>();
+        Dictionary<string, int> playerCount = new Dictionary<string, int>();
+        Dictionary<string, int> goldCount = new Dictionary<string, int>();
 
         int max = 0;
         int min = 0;
@@ -120,7 +179,7 @@ public class PGWorld : MonoBehaviour {
 
             string name = (string)playerList[i].GetType().GetMethod("GetName").Invoke(null, null);
 
-            uint gold = playerList[i].GetGold();
+            int gold = playerList[i].GetGold();
             if (gold > playerList[max].GetGold())
                 max = i;
             if (gold < playerList[min].GetGold())
@@ -143,15 +202,17 @@ public class PGWorld : MonoBehaviour {
 
         }
 
-        foreach (KeyValuePair<string, uint> item in playerCount)
+        foreach (KeyValuePair<string, int> item in playerCount)
         {
 
-            Debug.Log("Average " + item.Key + " gold: " + (float)goldCount[item.Key] / item.Value);
+            //Debug.Log("Average " + item.Key + " gold: " + (float)goldCount[item.Key] / item.Value);
 
         }
 
-        Debug.Log("Richest player: " + playerList[max].GetGold() + " gold, " + playerList[max].GetType().GetMethod("GetName").Invoke(null, null));
-        Debug.Log("Poorest player: " + playerList[min].GetGold() + " gold, " + playerList[min].GetType().GetMethod("GetName").Invoke(null, null));
+        ChartManager.instance.AddValue("Richest Player", playerList[max].GetGold());
+
+        //Debug.Log("Richest player: " + playerList[max].GetGold() + " gold, " + playerList[max].GetType().GetMethod("GetName").Invoke(null, null));
+        //Debug.Log("Poorest player: " + playerList[min].GetGold() + " gold, " + playerList[min].GetType().GetMethod("GetName").Invoke(null, null));
 
     }
 
@@ -175,6 +236,9 @@ public class PGWorld : MonoBehaviour {
         for(int i = 0; i < playerList.Count; i++)
             playerList[i].ProcessDay();
 
+        CountGamerEnjoyment();
+        CountGold();
+
         day++;
 
     }
@@ -182,7 +246,21 @@ public class PGWorld : MonoBehaviour {
     public void AddLevel(PGLevel level)
     {
 
-        levelList.Add(level);
+        if (levelList.Count == 0)
+            levelList.Add(level);
+        else
+            for(int i = 0; i < levelList.Count; i++)
+            {
+
+                if(levelList[i].GetDifficulty() > level.GetDifficulty())
+                {
+
+                    levelList.Insert(i, level);
+                    break;
+
+                }
+
+            }
 
     }
     public PGLevel GetLevel(int index)

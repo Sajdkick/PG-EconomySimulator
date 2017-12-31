@@ -61,10 +61,10 @@ public class PGCreator : PGPlayer {
     public override void ProcessHour()
     {
 
-        if(Random.Range(0, 16*30) > 16*30 - (levelsPerMonth + 1))
+        if(BehaviorManager.Session.StartASessionThisHourAndCreateALevel(levelsPerMonth))
         {
 
-            PGLevel level = new PGLevel(this, 1);
+            PGLevel level = new PGLevel(this, BehaviorManager.LevelCreation.DetermineQualityOfNewLevel(), BehaviorManager.LevelCreation.DetermineDifficultyOfNewLevel());
             PGWorld.instance.AddLevel(level);
             createdLevels.Add(level);
 
