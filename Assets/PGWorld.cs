@@ -36,7 +36,6 @@ public class PGWorld : MonoBehaviour {
 
                 ProcessYear();
                 CountGamerEnjoyment();
-                Clear();
 
             }
 
@@ -131,10 +130,10 @@ public class PGWorld : MonoBehaviour {
 
         ChartManager.instance.AddValue("Enjoyment", totalEnjoyment / gamerCount);
 
-        //string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
-        //info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
+        string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
+        info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
 
-        //Debug.Log(info);
+        Debug.Log(info);
 
     }
     void CountLevelPlays()
@@ -236,8 +235,7 @@ public class PGWorld : MonoBehaviour {
         for(int i = 0; i < playerList.Count; i++)
             playerList[i].ProcessDay();
 
-        CountGamerEnjoyment();
-        CountGold();
+        ChartManager.instance.GetDailyData();
 
         day++;
 
@@ -265,15 +263,20 @@ public class PGWorld : MonoBehaviour {
     }
     public PGLevel GetLevel(int index)
     {
-
         return levelList[index];
-
     }
     public int GetLevelCount()
     {
-
         return levelList.Count;
+    }
 
+    public PGPlayer GetPlayer(int index)
+    {
+        return playerList[index];
+    }
+    public int GetPlayerCount()
+    {
+        return playerList.Count;
     }
 
 }

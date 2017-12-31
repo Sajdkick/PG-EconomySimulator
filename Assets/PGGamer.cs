@@ -8,9 +8,11 @@ public class PGGamer : PGPlayer {
     {
         return 92;
     }
+
+    public static string name = "Gamer";
     public static new string GetName()
     {
-        return "Gamer";
+        return name;
     }
 
     public static int noNewLevelError = 0;

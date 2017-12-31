@@ -8,9 +8,11 @@ public class PGCreator : PGPlayer {
     {
         return 8;
     }
+
+    public static string name = "Creator";
     public static new string GetName()
     {
-        return "Creator";
+        return name;
     }
 
     int levelsPerMonth = 3;

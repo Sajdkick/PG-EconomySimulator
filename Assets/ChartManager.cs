@@ -19,8 +19,8 @@ public class ChartManager : MonoBehaviour {
 
         chartDictionary = new Dictionary<string, GameObject>();
 
-        CreateChart("Enjoyment");
-        CreateChart("Richest Player");
+        CreateChart("Enjoyment", new DataExtractors.Player.AverageGamerEnjoyment());
+        CreateChart("Richest Gamer", new DataExtractors.Player.RichestGamer());
 
     }
 
@@ -29,7 +29,7 @@ public class ChartManager : MonoBehaviour {
 		
 	}
 
-    void CreateChart(string name)
+    void CreateChart(string name, DataExtractor dataExtractor)
     {
 
         GameObject chart;
@@ -48,7 +48,10 @@ public class ChartManager : MonoBehaviour {
 
         }
 
+        chart.name = name;
+
         chart.GetComponent<ChartController>().header.text = name;
+        chart.GetComponent<ChartController>().dataExtractor = dataExtractor;
 
         chartDictionary.Add(name, chart);
 
@@ -67,6 +70,28 @@ public class ChartManager : MonoBehaviour {
         foreach (KeyValuePair<string, GameObject> chartObject in chartDictionary)
         {
             chartObject.Value.GetComponent<ChartController>().UpdateGraph();
+        }
+
+    }
+
+    public void GetDailyData()
+    {
+
+        int levelCount = PGWorld.instance.GetLevelCount();
+        for (int i = 0; i < levelCount; i++)
+            foreach (KeyValuePair<string, GameObject> chartObject in chartDictionary)
+                chartObject.Value.GetComponent<ChartController>().dataExtractor.Update(PGWorld.instance.GetLevel(i));
+
+        int playerCount = PGWorld.instance.GetPlayerCount();
+        for (int i = 0; i < playerCount; i++)
+            foreach (KeyValuePair<string, GameObject> chartObject in chartDictionary)
+                chartObject.Value.GetComponent<ChartController>().dataExtractor.Update(PGWorld.instance.GetPlayer(i));
+
+        foreach (KeyValuePair<string, GameObject> chartObject in chartDictionary)
+        {
+            ChartController chart = chartObject.Value.GetComponent<ChartController>();
+            chart.AddValue(chart.dataExtractor.GetValue());
+            chart.dataExtractor = (DataExtractor)System.Activator.CreateInstance(chart.dataExtractor.GetType());
         }
 
     }

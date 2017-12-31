@@ -8,6 +8,7 @@ public class ChartController : MonoBehaviour {
     public Text max;
     public Text min;
 
+    public DataExtractor dataExtractor;
     public LineChart chart;
 
     float minValue = float.MaxValue;
