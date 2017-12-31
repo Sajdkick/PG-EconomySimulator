@@ -128,8 +128,6 @@ public class PGWorld : MonoBehaviour {
             
         }
 
-        ChartManager.instance.AddValue("Enjoyment", totalEnjoyment / gamerCount);
-
         string info = "Average enjoyment among gamers: " + totalEnjoyment / gamerCount + ", Min: " + min + ", Max: " + max + "\n";
         info += "Happy gamers: " + happyCount + ", Sad gamers: " + sadCount + ", Happy ratio: " + (float)happyCount / (happyCount + sadCount) + "\n";
 

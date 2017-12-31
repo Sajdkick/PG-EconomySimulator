@@ -87,7 +87,36 @@ namespace DataExtractors
     }
     namespace Level
     {
+        public class AveragePlays : PlayerDataExtractor
+        {
 
+            uint totalPlays;
+            int levelCount;
+
+            public AveragePlays()
+            {
+
+                totalPlays = 0;
+                levelCount = 0;
+
+            }
+
+            public override void Update(PGLevel level)
+            {
+
+                totalPlays += level.GetPlayCount();
+                levelCount++;
+
+            }
+
+            public override float GetValue()
+            {
+
+                return (float)totalPlays / levelCount;
+
+            }
+
+        }
     }
 
 }

@@ -21,6 +21,7 @@ public class ChartManager : MonoBehaviour {
 
         CreateChart("Enjoyment", new DataExtractors.Player.AverageGamerEnjoyment());
         CreateChart("Richest Gamer", new DataExtractors.Player.RichestGamer());
+        CreateChart("Average Plays", new DataExtractors.Level.AveragePlays());
 
     }
 
