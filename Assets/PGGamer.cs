@@ -43,6 +43,7 @@ public class PGGamer : PGPlayer {
     uint plays = 0;
     uint retries = 0;
     uint wins = 0;
+    uint couldntFindLevel = 0;
 
     public PGGamer() {
 
@@ -103,8 +104,9 @@ public class PGGamer : PGPlayer {
         {
 
             float skillOffset = 0;
-            int min = Mathf.Clamp((int)(((skill + skillOffset - 1) / 10.0f) * levelCount), 0, levelCount - 1);
-            int max = Mathf.Clamp((int)(((skill + skillOffset + 1) / 10.0f) * levelCount), 0, levelCount - 1);
+            float range = 0.1f;
+            int min = Mathf.Clamp((int)(((skill + skillOffset - range) / 10.0f) * levelCount), 0, levelCount - 1);
+            int max = Mathf.Clamp((int)(((skill + skillOffset + range) / 10.0f) * levelCount), 0, levelCount - 1);
 
             int levelIndex = Random.Range(min, max);
             PGLevel level = PGWorld.instance.GetLevel(levelIndex);
@@ -141,6 +143,7 @@ public class PGGamer : PGPlayer {
 
         }
 
+        couldntFindLevel++;
         enjoyment += BehaviorManager.Enjoyment.EnjoymentOfNotFindingALevelToPlay();
 
     }
@@ -192,6 +195,27 @@ public class PGGamer : PGPlayer {
     {
 
         return skill;
+
+    }
+    public float GetWinRate()
+    {
+
+        if (plays == 0)
+            return 0;
+
+        return (float)wins / plays;
+
+    }
+    public uint GetCouldntFindLevelCount()
+    {
+
+        return couldntFindLevel;
+
+    }
+    public uint GetPlays()
+    {
+
+        return plays;
 
     }
 

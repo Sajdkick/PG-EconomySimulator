@@ -20,8 +20,13 @@ public class ChartManager : MonoBehaviour {
         chartDictionary = new Dictionary<string, GameObject>();
 
         CreateChart("Enjoyment", new DataExtractors.Player.AverageGamerEnjoyment());
+        CreateChart("Enjoyment Delta", new DataExtractors.Player.AverageEnjoymentDelta());
         CreateChart("Richest Gamer", new DataExtractors.Player.RichestGamer());
-        CreateChart("Average Plays", new DataExtractors.Level.AveragePlays());
+        CreateChart("Poorest Gamer", new DataExtractors.Player.PoorestGamer());
+        CreateChart("Average Plays per level", new DataExtractors.Level.AveragePlays());
+        CreateChart("Average Win Rate", new DataExtractors.Player.AverageWinRate());
+        CreateChart("Couldn't find level", new DataExtractors.Player.AverageCouldntFindLevelCount());
+        CreateChart("Average plays per gamer", new DataExtractors.Player.AveragePlays());
 
     }
 
@@ -92,7 +97,7 @@ public class ChartManager : MonoBehaviour {
         {
             ChartController chart = chartObject.Value.GetComponent<ChartController>();
             chart.AddValue(chart.dataExtractor.GetValue());
-            chart.dataExtractor = (DataExtractor)System.Activator.CreateInstance(chart.dataExtractor.GetType());
+            chart.dataExtractor.PrepareForNewDay();
         }
 
     }

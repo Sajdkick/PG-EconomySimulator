@@ -38,9 +38,22 @@ public class ChartController : MonoBehaviour {
     public void UpdateGraph()
     {
 
+        //If the difference is less than 10, we want some decimals.
+        if(maxValue - minValue < 10)
+        {
+
+            min.text = (minValue).ToString("0.00");
+            max.text = (maxValue).ToString("0.00");
+
+        }
+        else
+        {
+
+            min.text = ((int)minValue).ToString();
+            max.text = ((int)maxValue).ToString();
+
+        }
         chart.UpdateData(values.ToArray());
-        min.text = ((int)minValue).ToString();
-        max.text = ((int)maxValue).ToString();
 
     }
 
