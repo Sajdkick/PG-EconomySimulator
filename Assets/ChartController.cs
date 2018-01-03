@@ -2,55 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class ChartController : MonoBehaviour {
+
+public class ChartController : MonoBehaviour
+{
 
     public Text header;
-    public Text max;
-    public Text min;
+    public Text yMaxLabel;
+    public Text yMinLabel;
 
-    public DataExtractor dataExtractor;
     public LineChart chart;
 
-    float minValue = float.MaxValue;
-    float maxValue = float.MinValue;
+    protected float yMaxValue = float.MinValue;
+    protected float yMinValue = float.MaxValue;
 
-    List<float> values;
+    protected List<float> values;
 
-    public void Start()
+    public void Awake()
     {
 
         values = new List<float>();
+        Init();
 
     }
+    public virtual void Init() { }
 
     public void AddValue(float value)
     {
 
-        if (value < minValue)
-            minValue = value;
-        if (value > maxValue)
-            maxValue = value;
+        if (value < yMinValue)
+            yMinValue = value;
+        if (value > yMaxValue)
+            yMaxValue = value;
 
         values.Add(value);
 
     }
-    
-    public void UpdateGraph()
+
+    public virtual void UpdateGraph()
     {
 
         //If the difference is less than 10, we want some decimals.
-        if(maxValue - minValue < 10)
+        if (yMaxValue - yMinValue < 10)
         {
 
-            min.text = (minValue).ToString("0.00");
-            max.text = (maxValue).ToString("0.00");
+            yMinLabel.text = (yMinValue).ToString("0.00");
+            yMaxLabel.text = (yMaxValue).ToString("0.00");
 
         }
         else
         {
 
-            min.text = ((int)minValue).ToString();
-            max.text = ((int)maxValue).ToString();
+            yMinLabel.text = ((int)yMinValue).ToString();
+            yMaxLabel.text = ((int)yMaxValue).ToString();
 
         }
         chart.UpdateData(values.ToArray());

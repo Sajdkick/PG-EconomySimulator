@@ -14,7 +14,7 @@ public static class BehaviorManager {
 
         }
 
-        public static float EnjoymentFromBeatingLevel(float playerSkill, float levelDifficulty, uint levelQuality, int numberOfAttempts)
+        public static float EnjoymentFromBeatingLevel(float playerSkill, float levelDifficulty, float levelQuality, float numberOfAttempts)
         {
 
             float skillDifference = playerSkill - levelDifficulty;
@@ -27,13 +27,12 @@ public static class BehaviorManager {
 
         }
 
-        public static float EnjoymentFromBeatingAHighscore(uint playsOnLevel)
+        public static float EnjoymentFromBeatingAHighscore(float playsOnLevel, float mostPlays)
         {
 
-            float enjoyment = 9; //Base of 9, that of a good level.
-
             //We want the enjoyment to scale depending on how popular the level is, which is based to how close the play count is to that of the most played level.
-            float mostPlays = PGLevel.mostPopularLevel.GetPlayCount();
+
+            float enjoyment = 9; //Base of 9, that of a good level.
 
             // An exponential curve, that makes it more exciting the closer the level is to the most popular one.
             float popularFactor = Mathf.Pow(playsOnLevel / mostPlays, 3);
@@ -52,7 +51,7 @@ public static class BehaviorManager {
 
         }
 
-        public static float BaseEnjoymentFromLevel(uint levelQuality)
+        public static float BaseEnjoymentFromLevel(float levelQuality)
         {
             return Mathf.Pow(levelQuality, 2);
         }
@@ -62,6 +61,11 @@ public static class BehaviorManager {
             // 2 * 2 because we want the player to atleast play a level of quality 2 to have seen the session as a neutral, not good and not bad.
             // We add the + 2 because we want the experience to be a bit positive.
             return 2 * 2 + 2;
+        }
+
+        public static float BaseEnjoymentForNotChoosingLevel()
+        {
+            return 2;
         }
 
         public static float GoldToEnjoyment(int gold)
@@ -159,7 +163,7 @@ public static class BehaviorManager {
 
         public static float ChanceToPlayLevel(int plays, bool beaten, float playerSkill, float bestAttempt, float levelDifficulty, float levelQuality)
         {
-
+            
             // 100% chance to play is a level where, plays = 0, beaten = false, playerSkill = levelDifficulty, levelQuality = 4.
 
             float chance = 0;

@@ -226,13 +226,13 @@ namespace DataExtractors
             }
 
         }
-        public class AverageCouldntFindLevelCount : PlayerDataExtractor
+        public class AverageSkippedLevelCount : PlayerDataExtractor
         {
 
             float total;
             uint playerCount;
 
-            public AverageCouldntFindLevelCount()
+            public AverageSkippedLevelCount()
             {
                 Init();
             }
@@ -250,7 +250,7 @@ namespace DataExtractors
 
                     PGGamer gamer = (PGGamer)player;
 
-                    total += gamer.GetCouldntFindLevelCount();
+                    total += gamer.GetSkippedLevelCount();
                     playerCount++;
 
                 }
@@ -336,6 +336,96 @@ namespace DataExtractors
             {
 
                 return (float)totalPlays / levelCount;
+
+            }
+
+        }
+        public class NumberOfQuality1 : PlayerDataExtractor
+        {
+
+            int levelCount;
+
+            public NumberOfQuality1()
+            {
+                Init();
+            }
+            protected override void Init()
+            {
+                levelCount = 0;
+            }
+
+            public override void Update(PGLevel level)
+            {
+
+                if (level.GetQuality() <= 1)
+                    levelCount++;
+
+            }
+
+            public override float GetValue()
+            {
+
+                return levelCount;
+
+            }
+
+        }
+        public class NumberOfQuality2 : PlayerDataExtractor
+        {
+
+            int levelCount;
+
+            public NumberOfQuality2()
+            {
+                Init();
+            }
+            protected override void Init()
+            {
+                levelCount = 0;
+            }
+
+            public override void Update(PGLevel level)
+            {
+
+                if (level.GetQuality() > 1 && level.GetQuality() <= 2)
+                    levelCount++;
+
+            }
+
+            public override float GetValue()
+            {
+
+                return levelCount;
+
+            }
+
+        }
+        public class NumberOfQuality3 : PlayerDataExtractor
+        {
+
+            int levelCount;
+
+            public NumberOfQuality3()
+            {
+                Init();
+            }
+            protected override void Init()
+            {
+                levelCount = 0;
+            }
+
+            public override void Update(PGLevel level)
+            {
+
+                if (level.GetQuality() > 2 && level.GetQuality() <= 3)
+                    levelCount++;
+
+            }
+
+            public override float GetValue()
+            {
+
+                return levelCount;
 
             }
 

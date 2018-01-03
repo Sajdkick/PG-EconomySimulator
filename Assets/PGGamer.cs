@@ -15,8 +15,6 @@ public class PGGamer : PGPlayer {
         return name;
     }
 
-    public static int noNewLevelError = 0;
-
     public class LevelGamerData
     {
 
@@ -43,7 +41,7 @@ public class PGGamer : PGPlayer {
     uint plays = 0;
     uint retries = 0;
     uint wins = 0;
-    uint couldntFindLevel = 0;
+    uint skippedLevel = 0;
 
     public PGGamer() {
 
@@ -76,11 +74,7 @@ public class PGGamer : PGPlayer {
             int levelCount = PGWorld.instance.GetLevelCount();
 
             //There are no levels.
-            if (levelCount == 0)
-            {
-                noNewLevelError++;
-            }
-            else
+            if (levelCount != 0)
             {
 
                 SelectLevel();
@@ -97,54 +91,55 @@ public class PGGamer : PGPlayer {
     public void SelectLevel()
     {
 
-        int levelCount = PGWorld.instance.GetLevelCount();
-
-        // The player will scroll through 10 levels before quitting.
-        for(int i = 0; i < 10; i++)
+        for (int i = 4; i >= 0; i--)
         {
 
-            float skillOffset = 0;
-            float range = 0.1f;
-            int min = Mathf.Clamp((int)(((skill + skillOffset - range) / 10.0f) * levelCount), 0, levelCount - 1);
-            int max = Mathf.Clamp((int)(((skill + skillOffset + range) / 10.0f) * levelCount), 0, levelCount - 1);
-
-            int levelIndex = Random.Range(min, max);
-            PGLevel level = PGWorld.instance.GetLevel(levelIndex);
-
-            LevelGamerData levelGamerData = null;
-            for(int j = 0; j < playedLevels.Count; j++)
+            int levelCount = PGWorld.instance.levelList[i].Count;
+            bool unplayed = false;
+            for (int j = 0; j < levelCount; j++)
             {
 
-                if (playedLevels[j].level == level)
+                PGLevel level = PGWorld.instance.levelList[i][j];
+                LevelGamerData levelGamerData = null;
+                for (int k = 0; k < playedLevels.Count; k++)
                 {
 
-                    levelGamerData = playedLevels[j];
-                    break;
+                    if (playedLevels[k].level == level)
+                    {
+
+                        levelGamerData = playedLevels[k];
+                        break;
+
+                    }
+
+                }
+                if (levelGamerData == null)
+                {
+
+                    unplayed = true;
+                    levelGamerData = new LevelGamerData(level);
 
                 }
 
-            }
-            if (levelGamerData == null)
-            {
+                float chanceToPlayLevel = BehaviorManager.Gamer.ChanceToPlayLevel(levelGamerData.plays, levelGamerData.beaten, skill, levelGamerData.bestAttempt, levelGamerData.level.GetDifficulty(), levelGamerData.level.GetQuality());
 
-                levelGamerData = new LevelGamerData(level);
-                playedLevels.Add(levelGamerData);
+                if (Random.Range(0, 100.0f) < chanceToPlayLevel)
+                {
 
-            }
+                    Play(levelGamerData);
 
-            float chanceToPlayLevel = BehaviorManager.Gamer.ChanceToPlayLevel(levelGamerData.plays, levelGamerData.beaten, skill, levelGamerData.bestAttempt, levelGamerData.level.GetDifficulty(), levelGamerData.level.GetQuality());
+                    if(unplayed)
+                        playedLevels.Add(levelGamerData);
 
-            if(Random.Range(0,100.0f) < chanceToPlayLevel)
-            {
+                    return;
+                }
 
-                Play(levelGamerData);
-                return;
+                skippedLevel++;
+                enjoyment += BehaviorManager.Enjoyment.BaseEnjoymentForNotChoosingLevel();
+
             }
 
         }
-
-        couldntFindLevel++;
-        enjoyment += BehaviorManager.Enjoyment.EnjoymentOfNotFindingALevelToPlay();
 
     }
 
@@ -206,10 +201,10 @@ public class PGGamer : PGPlayer {
         return (float)wins / plays;
 
     }
-    public uint GetCouldntFindLevelCount()
+    public uint GetSkippedLevelCount()
     {
 
-        return couldntFindLevel;
+        return skippedLevel;
 
     }
     public uint GetPlays()

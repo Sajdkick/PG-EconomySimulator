@@ -72,7 +72,7 @@ public class PGLevel {
             if (attempt > bestScore)
             {
 
-                gamer.ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromBeatingAHighscore(playCount));
+                gamer.ChangeEnjoyment(BehaviorManager.Enjoyment.EnjoymentFromBeatingAHighscore(playCount, PGLevel.mostPopularLevel.playCount));
 
                 bestScore = attempt;
                 if (highscore.Count >= 10) //You beat the highscore on a level with at least 10 plays.

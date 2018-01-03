@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4200876514748170}
   - component: {fileID: 114301265488073826}
   m_Layer: 0
-  m_Name: LineChart_FillMat
+  m_Name: DailyChartPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ea7a9df603b4940ba15ae76322c3e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mThickness: 0.01
+  mThickness: 0.005
   row_max: 4
   col_max: 4
   UpdateForEditor: 0
@@ -324,8 +324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   header: {fileID: 114965013888252094}
-  max: {fileID: 114095818445172916}
-  min: {fileID: 114801449700266168}
+  yMaxLabel: {fileID: 114095818445172916}
+  yMinLabel: {fileID: 114801449700266168}
   chart: {fileID: 114824524273541490}
 --- !u!114 &114480404579520550
 MonoBehaviour:
