@@ -428,7 +428,35 @@ namespace DataExtractors
                 return levelCount;
 
             }
+        }
+        public class NumberOfQuality4 : PlayerDataExtractor
+        {
 
+            int levelCount;
+
+            public NumberOfQuality4()
+            {
+                Init();
+            }
+            protected override void Init()
+            {
+                levelCount = 0;
+            }
+
+            public override void Update(PGLevel level)
+            {
+
+                if (level.GetQuality() > 3 && level.GetQuality() <= 4)
+                    levelCount++;
+
+            }
+
+            public override float GetValue()
+            {
+
+                return levelCount;
+
+            }
         }
     }
 

@@ -26,6 +26,7 @@ public class ChartManager : MonoBehaviour {
         CreateChart("Number of Quality 1 levels", new DataExtractors.Level.NumberOfQuality1());
         CreateChart("Number of Quality 2 levels", new DataExtractors.Level.NumberOfQuality2());
         CreateChart("Number of Quality 3 levels", new DataExtractors.Level.NumberOfQuality3());
+        CreateChart("Number of Quality 4 levels", new DataExtractors.Level.NumberOfQuality4());
         CreateChart("Couldn't find level", new DataExtractors.Player.AverageSkippedLevelCount());
         CreateChart("Enjoyment Delta", new DataExtractors.Player.AverageEnjoymentDelta());
         CreateChart("Richest Gamer", new DataExtractors.Player.RichestGamer());

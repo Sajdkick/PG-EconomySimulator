@@ -110,14 +110,14 @@ public static class BehaviorManager {
 
             uint quality = 0;
             int roll = Random.Range(0, 100);
-            if (roll < 50)
-                quality = 1; //These levels leave a poor impression on the player.
-            else if (roll < 80)
-                quality = 2; //These levels are good, but not that good. "Yeah it was okay"
-            else if (roll < 95)
-                quality = 3; //These levels are cool! "I really liked it, i might recommend it to someone"
+            if (roll < 5)
+                quality = 4; //These levels leave a poor impression on the player.
+            else if (roll < 20)
+                quality = 3; //These levels are good, but not that good. "Yeah it was okay"
+            else if (roll < 50)
+                quality = 2; //These levels are cool! "I really liked it, i might recommend it to someone"
             else
-                quality = 4; //These are incredible, everyone has to see this!!!
+                quality = 1; //These are incredible, everyone has to see this!!!
 
             return quality;
 
@@ -172,12 +172,12 @@ public static class BehaviorManager {
             if (plays == 0)
             {
 
-                // We add 20 percent because we haven't played it.
-                chance += 20;
+                // We add 40 percent because we haven't played it.
+                chance += 40;
 
-                //We add 30 percent if it's right on our skill level.
+                //We add 10 percent if it's right on our skill level.
                 float skillDifference = Mathf.Abs(playerSkill - levelDifficulty);
-                chance += 30 * (10 - skillDifference) / 10.0f;
+                chance += 10 * (10 - skillDifference) / 10.0f;
 
                 //We add 50 percent if it's of the best quality.
                 chance += Mathf.Pow(levelQuality / 4.0f, 3) * 4 * 12.5f;
@@ -187,7 +187,8 @@ public static class BehaviorManager {
             {
 
                 // If we have less then a 100 attempts, we add 20 percent.
-                chance += 20;
+                if(plays < 100)
+                    chance += 20;
 
                 // If our best attempt was very close to beating it, we add 30 percent.
                 chance += (1 - (Mathf.Abs(bestAttempt) / 20.0f)) * 30;

@@ -23,7 +23,7 @@ public class PGWorld : MonoBehaviour {
         for (int i = 0; i < levelList.Length; i++)
             levelList[i] = new List<PGLevel>();
 
-        CreateLevels(1000);
+        //CreateLevels(1000);
 
     }
 
